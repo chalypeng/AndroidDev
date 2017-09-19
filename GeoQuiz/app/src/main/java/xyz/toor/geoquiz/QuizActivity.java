@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -32,6 +34,8 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
+
+    private int mScores = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,16 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+
+                // 当回答最后一个问题完的时候，提示总得分
+                int maxOfQuestionIndex = mQuestionBank.length - 1;
+                if (mCurrentIndex == maxOfQuestionIndex) {
+                    Double finalScore = (mScores * 100.0) / mQuestionBank.length;
+                    String msg = String.format(getString(R.string.score_msg), finalScore);
+                    Toast.makeText(QuizActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    mScores = 0;
+                }
+
                 updateQuestion();
             }
         });
@@ -122,6 +136,9 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void updateQuestion() {
+        mTrueButton.setEnabled(true);
+        mFalseButton.setEnabled(true);
+
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
     }
@@ -131,9 +148,18 @@ public class QuizActivity extends AppCompatActivity {
         int messageResId = 0;
         if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
+            mScores += 1;
+            Log.d(TAG, String.valueOf(mScores));
         } else {
             messageResId = R.string.incorrect_toast;
         }
+        // 回答完了，不能再回答这个问题
+        mTrueButton.setEnabled(false);
+        mFalseButton.setEnabled(false);
+
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+
+
     }
+
 }

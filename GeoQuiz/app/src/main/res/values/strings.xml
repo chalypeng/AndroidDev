@@ -14,4 +14,5 @@
     <string name="previous_button">Prev</string>
     <string name="previous_button_desc">privious question</string>
     <string name="next_button_desc">next question</string>
+    <string name="score_msg">Done, you get: %.2f</string>
 </resources>
