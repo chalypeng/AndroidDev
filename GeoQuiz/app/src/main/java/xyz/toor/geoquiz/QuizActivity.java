@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,7 +13,9 @@ import android.widget.Toast;
 public class QuizActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
-    private Button mNextButton;
+    private ImageButton mNextButton;
+    private ImageButton mPrevButton;
+
     private TextView mQuestionTextView;
 
     private Question[] mQuestionBank = new Question[]{
@@ -57,7 +60,7 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-        mNextButton = (Button) findViewById(R.id.next_button);
+        mNextButton = (ImageButton) findViewById(R.id.next_button);
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +68,31 @@ public class QuizActivity extends AppCompatActivity {
                 updateQuestion();
             }
         });
+
+        // Challenge: Previous button
+        mPrevButton = (ImageButton) findViewById(R.id.previous_button);
+        mPrevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex == 0) ?
+                        (mQuestionBank.length - 1) :
+                        (mCurrentIndex - 1);
+                updateQuestion();
+            }
+        });
+
+
         updateQuestion();
+
+        // Challenge: Add a Listener to the TextView
+        mQuestionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                updateQuestion();
+            }
+        });
+
     }
 
     private void updateQuestion() {
@@ -73,14 +100,14 @@ public class QuizActivity extends AppCompatActivity {
         mQuestionTextView.setText(question);
     }
 
-    private void checkAnswer(Boolean userPressedTrue){
+    private void checkAnswer(Boolean userPressedTrue) {
         boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
         int messageResId = 0;
-        if (userPressedTrue == answerIsTrue){
+        if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;
-        }else{
+        } else {
             messageResId = R.string.incorrect_toast;
         }
-        Toast.makeText(this,messageResId,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
 }
