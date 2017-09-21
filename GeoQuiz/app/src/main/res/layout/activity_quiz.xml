@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:tool="http://schemas.android.com/tools"
               android:gravity="center"
               android:orientation="vertical">
 
@@ -29,18 +30,26 @@
             android:text="@string/false_button"/>
 
     </LinearLayout>
-        <Button
-            android:id="@+id/cheat_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cheat_button"/>
 
-        <Button
-            android:id="@+id/next_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/next_button"
-            android:drawableRight="@drawable/arrow_right"
-            android:drawablePadding="4dp"/>
+    <Button
+        android:id="@+id/cheat_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cheat_button"/>
+
+    <TextView
+        android:id="@+id/cheat_count_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        tool:text="Remaining cheat times: "/>
+
+    <Button
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="4dp"
+        android:drawableRight="@drawable/arrow_right"
+        android:text="@string/next_button"/>
 
 </LinearLayout>

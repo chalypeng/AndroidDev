@@ -36,6 +36,8 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
+    private int mCheatTimes = 0;
+    private TextView mRemainningCheatTimesTextView;
     private boolean mIsCheater;
 
     @Override
@@ -44,10 +46,19 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
 
+        mRemainningCheatTimesTextView = (TextView) findViewById(R.id.cheat_count_text_view);
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
-            mIsCheater = savedInstanceState.getBoolean(KEY_ISCHEATED,false);
+            mIsCheater = savedInstanceState.getBoolean(KEY_ISCHEATED, false);
         }
+
+        // 当是第一个问题是重置作弊次数
+        if (mCurrentIndex == 0) {
+            mCheatTimes = 0;
+            mRemainningCheatTimesTextView.setText("Remaining cheat times: 3");
+
+        }
+
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
 
@@ -72,6 +83,12 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+                // 当是第一个问题是重置作弊次数
+                if (mCurrentIndex == 0) {
+                    mCheatButton.setEnabled(true);
+                    mCheatTimes = 0;
+                    mRemainningCheatTimesTextView.setText(String.format(getString(R.string.maining_times),3));
+                }
                 mIsCheater = false;
                 updateQuestion();
             }
@@ -84,6 +101,14 @@ public class QuizActivity extends AppCompatActivity {
                 // Start CheatActivity, OS find CheatActivity in manifests files, if finds a declaration
                 // starts the activity, if can not , throw ActivityNotFoundException.
 //                Intent intent = new Intent(QuizActivity.this,CheatActivity.class);
+                if (mCheatTimes < 3) {
+                    mCheatTimes += 1;
+                    mRemainningCheatTimesTextView.setText(String.format(getString(R.string.maining_times),3-mCheatTimes));
+                } else {
+                    mCheatButton.setEnabled(false);
+                    mRemainningCheatTimesTextView.setText(String.format(getString(R.string.maining_times),3));
+                }
+
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
@@ -141,7 +166,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         Log.d(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
-        savedInstanceState.putBoolean(KEY_ISCHEATED,mIsCheater);
+        savedInstanceState.putBoolean(KEY_ISCHEATED, mIsCheater);
     }
 
     @Override

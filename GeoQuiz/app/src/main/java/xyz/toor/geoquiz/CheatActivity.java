@@ -25,6 +25,7 @@ public class CheatActivity extends AppCompatActivity {
     private TextView mAnswerTextView;
     private TextView mAPILevelTextView;
 
+
     private boolean mIsCheater;
 
     public static Intent newIntent(Context packageContext, boolean answerIsTrue) {
