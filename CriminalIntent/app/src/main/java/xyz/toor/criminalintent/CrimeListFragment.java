@@ -112,10 +112,12 @@ public class CrimeListFragment extends Fragment {
 
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
+        List<Crime> crimes = crimeLab.getCrimes();
         if (mAdapter == null) {
-            mAdapter = new CrimeAdapter(crimeLab.getCrimes());
+            mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
+            mAdapter.setCrimes(crimes);
             // 不高效，高效的方式是，只通知更改的Item用mAdapter.notifyItemChanged(int position);
             mAdapter.notifyDataSetChanged();
 //            mAdapter.notifyItemChanged(currentPosition);
@@ -183,6 +185,10 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+
+        public void setCrimes(List<Crime> crimes){
+            mCrimes = crimes;
         }
     }
 }
