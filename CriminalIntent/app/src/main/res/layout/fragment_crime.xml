@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_margin="16dp"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:weightSum="1">
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
@@ -33,5 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/crime_solved_label"/>
+
+
 
 </LinearLayout>
