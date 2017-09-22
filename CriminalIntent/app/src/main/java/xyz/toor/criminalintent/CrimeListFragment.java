@@ -1,6 +1,5 @@
 package xyz.toor.criminalintent;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,10 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
-import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Created by chalypeng on 2017/9/21.
@@ -24,6 +24,9 @@ import java.util.Locale;
 public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+
+    // 记录当前点击的Position
+    private int currentPosition = 0;
 
     @Nullable
     @Override
@@ -39,10 +42,23 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
-        mAdapter = new CrimeAdapter(crimeLab.getCrimes());
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if (mAdapter == null) {
+            mAdapter = new CrimeAdapter(crimeLab.getCrimes());
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        } else {
+            // 不高效，高效的方式是，只通知更改的Item用mAdapter.notifyItemChanged(int position);
+//            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemChanged(currentPosition);
+        }
+
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -59,12 +75,13 @@ public class CrimeListFragment extends Fragment {
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_date);
             mSolvedImageView = (ImageView) itemView.findViewById(R.id.crime_solved);
         }
-        public void bind(Crime crime){
+
+        public void bind(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
             // 日期格式化
-            mDateTextView.setText(DateFormat.format("yyyy-MM-dd EE HH:mm:ss",mCrime.getDate()));
-            mSolvedImageView.setVisibility(crime.isSolved()?View.VISIBLE:View.GONE);
+            mDateTextView.setText(DateFormat.format("yyyy-MM-dd EE HH:mm:ss", mCrime.getDate()));
+            mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
 
         @Override
@@ -74,14 +91,16 @@ public class CrimeListFragment extends Fragment {
 //                    Toast.LENGTH_SHORT)
 //                    .show();
 //            Intent intent = new Intent(getActivity(),CrimeActivity.class);
-            startActivity(CrimeActivity.newIntent(getActivity(),mCrime.getId()));
+            startActivity(CrimeActivity.newIntent(getActivity(), mCrime.getId()));
+            currentPosition = getLayoutPosition();
+
         }
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
-        private List<Crime> mCrimes;
+        private ArrayList<Crime> mCrimes;
 
-        public CrimeAdapter(List<Crime> crimes) {
+        public CrimeAdapter(ArrayList<Crime> crimes) {
             mCrimes = crimes;
         }
 
