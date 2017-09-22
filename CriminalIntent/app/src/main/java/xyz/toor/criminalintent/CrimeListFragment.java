@@ -55,8 +55,8 @@ public class CrimeListFragment extends Fragment {
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
             // 不高效，高效的方式是，只通知更改的Item用mAdapter.notifyItemChanged(int position);
-//            mAdapter.notifyDataSetChanged();
-            mAdapter.notifyItemChanged(currentPosition);
+            mAdapter.notifyDataSetChanged();
+//            mAdapter.notifyItemChanged(currentPosition);
         }
 
     }
@@ -91,16 +91,17 @@ public class CrimeListFragment extends Fragment {
 //                    Toast.LENGTH_SHORT)
 //                    .show();
 //            Intent intent = new Intent(getActivity(),CrimeActivity.class);
-            startActivity(CrimeActivity.newIntent(getActivity(), mCrime.getId()));
-            currentPosition = getLayoutPosition();
+//            startActivity(CrimeActivity.newIntent(getActivity(), mCrime.getId()));
+            startActivity(CrimePagerActivity.newIntent(getActivity(),mCrime.getId()));
+//            currentPosition = getLayoutPosition();
 
         }
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
-        private ArrayList<Crime> mCrimes;
+        private List<Crime> mCrimes;
 
-        public CrimeAdapter(ArrayList<Crime> crimes) {
+        public CrimeAdapter(List<Crime> crimes) {
             mCrimes = crimes;
         }
 
