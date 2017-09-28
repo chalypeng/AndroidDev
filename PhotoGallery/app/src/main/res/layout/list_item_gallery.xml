@@ -4,6 +4,7 @@
     android:id="@+id/item_image_view"
     android:layout_width="match_parent"
     android:layout_height="120dp"
+    android:layout_margin="2dp"
     android:layout_gravity="center"
     android:scaleType="centerCrop">
 
