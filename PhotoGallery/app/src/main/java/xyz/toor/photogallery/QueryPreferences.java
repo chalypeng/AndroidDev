@@ -13,6 +13,12 @@ public class QueryPreferences {
     public static String getStoredQuery(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(PREF_SEARCH_QUERY,null);
+    }
 
+    public static void setPrefSearchQuery(Context context,String query){
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putString(PREF_SEARCH_QUERY,query)
+                .apply();
     }
 }
