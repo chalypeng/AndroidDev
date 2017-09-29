@@ -1,6 +1,7 @@
 package xyz.toor.photogallery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,6 +49,10 @@ public class PhotoGalleryFragment extends Fragment {
 //        new FetchItemsTask().execute();
 
         updateItems();
+
+        Intent i = PollService.newIntent(getActivity());
+        getActivity().startService(i);
+
 //        Handler responseHandle = new Handler();
 
 //        mThumbnailDownloader = new ThumbnailDownloader<>(responseHandle);
