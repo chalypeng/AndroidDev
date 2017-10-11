@@ -30,7 +30,7 @@ import java.util.List;
  * Created by chalypeng on 2017/9/26.
  */
 
-public class PhotoGalleryFragment extends Fragment {
+public class PhotoGalleryFragment extends VisibleFragment {
     private static final String TAG = "PhotoGalleryFragment";
 
     private RecyclerView mPhotoRecyclerView;
@@ -50,8 +50,9 @@ public class PhotoGalleryFragment extends Fragment {
 
         updateItems();
 
-        Intent i = PollService.newIntent(getActivity());
-        getActivity().startService(i);
+//        Intent i = PollService.newIntent(getActivity());
+//        getActivity().startService(i);
+//        PollService.setServiceAlarm(getActivity(),true);
 
 //        Handler responseHandle = new Handler();
 
@@ -134,7 +135,7 @@ public class PhotoGalleryFragment extends Fragment {
             }
         });
 
-        searchView.setOnClickListener(new View.OnClickListener() {
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchView.setQuery(
@@ -142,6 +143,13 @@ public class PhotoGalleryFragment extends Fragment {
                         false);
             }
         });
+
+        MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
+        if (PollService.isServiceAlarmOn(getActivity())){
+            toggleItem.setTitle(R.string.stop_polling);
+        }else{
+            toggleItem.setTitle(R.string.start_polling);
+        }
     }
 
     @Override
@@ -152,6 +160,10 @@ public class PhotoGalleryFragment extends Fragment {
                 QueryPreferences.setPrefSearchQuery(getActivity(), null);
                 updateItems();
                 return true;
+            case R.id.menu_item_toggle_polling:
+                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
+                PollService.setServiceAlarm(getActivity(),shouldStartAlarm);
+                getActivity().invalidateOptionsMenu(); //Declare that the options menu has changed, so should be recreated.
             default:
                 return super.onOptionsItemSelected(item);
         }
