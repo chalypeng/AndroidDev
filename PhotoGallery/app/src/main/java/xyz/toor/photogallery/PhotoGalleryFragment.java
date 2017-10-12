@@ -181,12 +181,13 @@ public class PhotoGalleryFragment extends VisibleFragment {
         }
     }
 
-    private class PhotoHolder extends RecyclerView.ViewHolder {
+    private class PhotoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mItemImageView;
-
+        private GalleryItem mGalleryItem;
         public PhotoHolder(View itemView) {
             super(itemView);
-            mItemImageView = (ImageView) itemView;
+            mItemImageView = (ImageView) itemView.findViewById(R.id.item_image_view);
+            itemView.setOnClickListener(this);
         }
 
         public void bindDrawable(Drawable drawable) {
@@ -194,11 +195,19 @@ public class PhotoGalleryFragment extends VisibleFragment {
         }
 
         public void bindGalleryItem(GalleryItem galleryItem) {
+            mGalleryItem = galleryItem;
             // Picasso 加载图片的方式
             Picasso.with(getActivity())
                     .load(galleryItem.getUrl())
                     .placeholder(R.drawable.bill_up_close)
                     .into(mItemImageView);
+        }
+
+        @Override
+        public void onClick(View v) {
+//            startActivity(new Intent(Intent.ACTION_VIEW,mGalleryItem.getPhotoPageUri()));
+            Intent i = PhotoPageActivity.newIntent(getActivity(),mGalleryItem.getPhotoPageUri());
+            startActivity(i);
         }
     }
 
@@ -220,9 +229,9 @@ public class PhotoGalleryFragment extends VisibleFragment {
         public void onBindViewHolder(PhotoHolder holder, int position) {
             GalleryItem galleryItem = mGalleryItems.get(position);
 //            Drawable placeHoder = getResources().getDrawable(R.drawable.bill_up_close);
-//            holder.bindDrawable(placeHoder);
+//            holder.bindDrawable(placeHolder);
 //            mThumbnailDownloader.queueThumbnail(holder,galleryItem.getUrl());
-            // 用第三方库Picasso，不需要ThumbnailDownloader
+            // 用Picasso，不需要ThumbnailDownloader
             holder.bindGalleryItem(galleryItem);
 
         }
